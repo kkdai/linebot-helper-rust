@@ -79,7 +79,7 @@ GOOGLE_CLOUD_PROJECT=... GOOGLE_AI_API_KEY=... cargo test -- --ignored --nocaptu
 
 1. Cloud Build 建置映像檔（`cloudbuild.yaml`，推到 Artifact Registry `cloud-run-source-deploy`）
 2. 從現有的 `linebot-helper-python` 服務複製環境變數與 service account（只寫進暫存檔，不輸出）
-3. 部署 `linebot-helper-rust`（us-central1、`--no-cpu-throttling`、`--cpu-boost`、2 CPU / 2Gi）
+3. 部署 `linebot-helper-rust`（us-central1、`--no-cpu-throttling`、`--cpu-boost`、1 CPU / 1Gi、concurrency 10）
 4. 執行 `scripts/smoke_test.sh`
 
 > `--no-cpu-throttling` 是必要的：webhook 立刻回 200 後，事件在背景處理，CPU 被凍結的話背景任務不會執行。
