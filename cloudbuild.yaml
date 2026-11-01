@@ -1,0 +1,20 @@
+# 建置並推送映像檔（部署由 scripts/deploy.sh 執行，才能帶入環境變數）
+# 用法：gcloud builds submit --config cloudbuild.yaml --substitutions=_TAG=$(git rev-parse --short HEAD)
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: cloud-run-source-deploy
+  _IMAGE: linebot-helper-rust
+  _TAG: latest
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:${_TAG}
+      - .
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:${_TAG}
+options:
+  # Rust release build 吃 CPU，用 8 核機器縮短建置時間
+  machineType: E2_HIGHCPU_8
+timeout: 1800s

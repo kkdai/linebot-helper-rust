@@ -14,8 +14,12 @@ use crate::voice;
 
 pub async fn build(config: Config) -> anyhow::Result<Router> {
     let state = AppState::new(config).await;
-    foodie::spawn_batch_polling(state.clone());
-    tracing::info!("Batch job polling background task started");
+    if state.config.enable_batch_polling {
+        foodie::spawn_batch_polling(state.clone());
+        tracing::info!("Batch job polling background task started");
+    } else {
+        tracing::info!("Batch job polling disabled (ENABLE_BATCH_POLLING=false)");
+    }
     Ok(router(state))
 }
 

@@ -27,6 +27,8 @@ pub struct Config {
     pub temperature: f32,
     pub enable_grounding: bool,
     pub enable_maps_grounding: bool,
+    /// 每 60 秒輪詢 Gemini Batch jobs。與 Python 版並行期間要關掉，避免兩邊重複推播
+    pub enable_batch_polling: bool,
 
     // Gemini Developer API（TTS / Batch / Live）。Live 模型寫死在 voice.rs（同 Python 版）
     pub google_ai_api_key: String,
@@ -92,6 +94,7 @@ impl Config {
             temperature: parse_or("AGENT_TEMPERATURE", 0.7),
             enable_grounding: flag("ENABLE_GROUNDING", true),
             enable_maps_grounding: flag("ENABLE_MAPS_GROUNDING", true),
+            enable_batch_polling: flag("ENABLE_BATCH_POLLING", true),
             google_ai_api_key: optional("GOOGLE_AI_API_KEY")
                 .or_else(|| optional("GEMINI_API_KEY"))
                 .unwrap_or_default(),
@@ -124,6 +127,7 @@ impl Config {
             temperature: 0.7,
             enable_grounding: true,
             enable_maps_grounding: true,
+            enable_batch_polling: false,
             google_ai_api_key: "test-key".into(),
             firecrawl_key: None,
             github_token: None,
