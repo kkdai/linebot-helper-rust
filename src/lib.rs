@@ -1,3 +1,4 @@
+pub mod agents;
 pub mod ai;
 pub mod app;
 pub mod config;
