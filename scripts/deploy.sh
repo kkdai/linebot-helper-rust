@@ -52,6 +52,7 @@ gcloud run deploy "$SERVICE" \
   --memory 1Gi \
   --concurrency 10 \
   --timeout 300 \
+  --min-instances 0 \
   --max-instances 50
 
 URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')"
