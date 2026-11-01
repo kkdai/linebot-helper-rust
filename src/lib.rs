@@ -3,4 +3,5 @@ pub mod config;
 pub mod gcp;
 pub mod gemini;
 pub mod line;
+pub mod loader;
 pub mod store;
