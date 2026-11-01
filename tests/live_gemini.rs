@@ -104,3 +104,19 @@ async fn tts_produces_audio() {
         assert_eq!(&m4a[4..8], b"ftyp");
     }
 }
+
+#[tokio::test]
+#[ignore]
+async fn batch_list_jobs_read_only() {
+    let key = std::env::var("GOOGLE_AI_API_KEY").unwrap();
+    let svc = linebot_helper::batch::BatchService::new(
+        GeminiClient::developer(reqwest::Client::new(), &key),
+        std::sync::Arc::new(linebot_helper::store::MemoryKv::new()),
+    );
+    let jobs = svc.list_jobs().await.unwrap();
+    println!(
+        "{} batch jobs: {:?}",
+        jobs.len(),
+        jobs.iter().take(3).collect::<Vec<_>>()
+    );
+}

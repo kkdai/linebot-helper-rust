@@ -2,6 +2,7 @@
 
 pub mod client;
 pub mod errors;
+pub mod flex;
 pub mod messages;
 pub mod webhook;
 
