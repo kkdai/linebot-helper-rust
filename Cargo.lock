@@ -1674,6 +1674,7 @@ dependencies = [
  "quick-xml",
  "regex",
  "reqwest",
+ "rustls",
  "scraper",
  "serde",
  "serde_json",

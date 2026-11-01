@@ -10,6 +10,7 @@ use tower_http::trace::TraceLayer;
 use crate::config::Config;
 use crate::handlers::{self, foodie, gemini_callback, push};
 use crate::state::AppState;
+use crate::voice;
 
 pub async fn build(config: Config) -> anyhow::Result<Router> {
     let state = AppState::new(config).await;
@@ -26,6 +27,8 @@ pub fn router(state: Arc<AppState>) -> Router {
             get(handlers::health_check).post(handlers::line_webhook),
         )
         .route("/reports/{id}", get(handlers::serve_report))
+        .route("/liff/", get(voice::serve_liff))
+        .route("/ws/voice/{session_id}", get(voice::voice_ws))
         .route("/images/{id}", get(handlers::serve_image))
         .route("/audio/{id}", get(handlers::serve_audio))
         .route("/hn", post(push::hacker_news))

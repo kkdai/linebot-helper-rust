@@ -22,6 +22,7 @@ fn init_tracing() {
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     init_tracing();
+    linebot_helper::install_crypto_provider();
 
     let config = Config::from_env()?;
     let addr = SocketAddr::from(([0, 0, 0, 0], config.port));

@@ -28,9 +28,8 @@ pub struct Config {
     pub enable_grounding: bool,
     pub enable_maps_grounding: bool,
 
-    // Gemini Developer API（TTS / Batch / Live）
+    // Gemini Developer API（TTS / Batch / Live）。Live 模型寫死在 voice.rs（同 Python 版）
     pub google_ai_api_key: String,
-    pub voice_model: String,
 
     // 選用功能
     pub firecrawl_key: Option<String>,
@@ -96,7 +95,6 @@ impl Config {
             google_ai_api_key: optional("GOOGLE_AI_API_KEY")
                 .or_else(|| optional("GEMINI_API_KEY"))
                 .unwrap_or_default(),
-            voice_model: or_default("VOICE_MODEL", "gemini-3.1-flash-live-preview"),
             firecrawl_key: optional("firecrawl_key"),
             github_token: optional("GITHUB_TOKEN"),
             webhook_signing_secret: optional("WEBHOOK_SIGNING_SECRET"),
@@ -127,7 +125,6 @@ impl Config {
             enable_grounding: true,
             enable_maps_grounding: true,
             google_ai_api_key: "test-key".into(),
-            voice_model: "gemini-3.1-flash-live-preview".into(),
             firecrawl_key: None,
             github_token: None,
             webhook_signing_secret: None,
