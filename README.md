@@ -30,7 +30,7 @@ LINE ──webhook──▶ axum (POST /) ──簽章驗證後立刻回 200─�
 | `loader` | URL fallback chain、HTML→Markdown、文件轉換 | `loader/url.py`、`loader/document.py` |
 | `ai` | 摘要、社群文案、研究報告、圖片、語音、TTS、地圖、GitHub（prompt 原文照搬） | `tools/`、`loader/langtools.py` |
 | `agents` | Orchestrator 與 ChatAgent | `agents/` |
-| `handlers` | webhook、訊息、postback、推播端點、美食分析、Gemini callback | `main.py` |
+| `handlers` | webhook、訊息、postback、美食分析、Gemini callback | `main.py` |
 | `batch` | Gemini Batch API | `services/batch_service.py` |
 | `voice` | LIFF 語音：Gemini Live API WebSocket relay | `services/voice_live.py` |
 
@@ -45,13 +45,14 @@ Prompt 由 `scripts/extract_prompts.py` 用 `ast` 從 Python 原始碼抽出到 
 - **`VOICE_MODEL` 環境變數不使用**：Python 版把模型寫死為 `gemini-3.1-flash-live-preview`，Rust 版維持相同行為。
 - **`ENABLE_BATCH_POLLING`**（新增，預設 `true`）：與 Python 版並行期間設為 `false`，避免兩個服務同時輪詢、重複推播同一份美食分析。
 - 研究報告頁的標題與網址做了 HTML escape。
+- **移除推播端點 `/hn`、`/hf`、`/urls`**（#13）：過去 30 天沒有任何呼叫，且端點沒有驗證，任何人都能觸發爬蟲與推播。`ChannelAccessTokenHF`、`LINE_USER_ID` 因此不再需要。
 
 資料格式（Firestore collections `chat_sessions`、`bookmarks`、`reports`、`batch_jobs`）與 Python 版相同，兩版可共用同一個 Firestore。
 
 ## 本機開發
 
 ```bash
-export ChannelSecret=... ChannelAccessToken=... ChannelAccessTokenHF=... LINE_USER_ID=...
+export ChannelSecret=... ChannelAccessToken=...
 export GOOGLE_CLOUD_PROJECT=your-project GOOGLE_AI_API_KEY=...
 gcloud auth application-default login   # Vertex AI 與 Firestore 走 ADC
 
@@ -88,7 +89,6 @@ GOOGLE_CLOUD_PROJECT=... GOOGLE_AI_API_KEY=... cargo test -- --ignored --nocaptu
 1. 部署後在 LINE 裡測試前，先確認 smoke test 全部通過。
 2. 到 [LINE Developers Console](https://developers.line.biz/console/) 把 Messaging API 的 webhook URL 改成新服務的網址（結尾 `/`），按 Verify。
 3. 如有使用 LIFF，把 LIFF endpoint 改成 `https://<新服務>/liff/`。
-4. `/hn`、`/hf`、`/urls` 的排程呼叫端改指向新服務。
-5. 開啟 Batch 輪詢：`ENABLE_BATCH_POLLING=true ./scripts/deploy.sh`，並停用 Python 版（避免重複輪詢）。
+4. 開啟 Batch 輪詢：`ENABLE_BATCH_POLLING=true ./scripts/deploy.sh`，並停用 Python 版（避免重複輪詢）。
 
 要切回 Python 版，只要把 webhook URL 改回去即可。

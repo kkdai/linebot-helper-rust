@@ -4,7 +4,6 @@ pub mod foodie;
 pub mod gemini_callback;
 pub mod message;
 pub mod postback;
-pub mod push;
 
 use std::sync::Arc;
 

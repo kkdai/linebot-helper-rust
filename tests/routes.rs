@@ -359,7 +359,7 @@ async fn location_message_offers_nearby_search() {
 }
 
 #[tokio::test]
-async fn urls_endpoint_validates_input() {
+async fn removed_push_endpoints_return_404() {
     let app = router(AppState::for_test(
         Config::for_test(),
         Endpoints {
@@ -367,21 +367,20 @@ async fn urls_endpoint_validates_input() {
             gemini: None,
         },
     ));
-    for payload in [
-        json!({"urls": []}),
-        json!({"urls": ["a", "b", "c", "d", "e", "f"]}),
-    ] {
+    for uri in ["/hn", "/hf", "/urls"] {
         let resp = app
             .clone()
             .oneshot(
-                Request::post("/urls")
+                Request::post(uri)
                     .header("content-type", "application/json")
-                    .body(Body::from(payload.to_string()))
+                    .body(Body::from(
+                        json!({"urls": ["https://example.com"]}).to_string(),
+                    ))
                     .unwrap(),
             )
             .await
             .unwrap();
-        assert_eq!(resp.status(), StatusCode::BAD_REQUEST);
+        assert_eq!(resp.status(), StatusCode::NOT_FOUND, "{uri}");
     }
 }
 

@@ -38,14 +38,6 @@ impl LineClient {
         }
     }
 
-    /// 換一個 channel token（`/hf` 推播用另一個 bot）。
-    pub fn with_token(&self, token: &str) -> Self {
-        Self {
-            token: token.into(),
-            ..self.clone()
-        }
-    }
-
     async fn post(&self, path: &str, body: &Value) -> anyhow::Result<()> {
         let resp = self
             .http

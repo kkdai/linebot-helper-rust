@@ -8,7 +8,7 @@ use tower_http::services::ServeDir;
 use tower_http::trace::TraceLayer;
 
 use crate::config::Config;
-use crate::handlers::{self, foodie, gemini_callback, push};
+use crate::handlers::{self, foodie, gemini_callback};
 use crate::state::AppState;
 use crate::voice;
 
@@ -35,9 +35,6 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/ws/voice/{session_id}", get(voice::voice_ws))
         .route("/images/{id}", get(handlers::serve_image))
         .route("/audio/{id}", get(handlers::serve_audio))
-        .route("/hn", post(push::hacker_news))
-        .route("/hf", post(push::huggingface))
-        .route("/urls", post(push::multi_urls))
         .route(
             "/api/gemini-callback/static",
             post(gemini_callback::static_webhook),

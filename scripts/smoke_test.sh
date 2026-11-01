@@ -16,5 +16,7 @@ check "GET /static/liff/voice.js"  200 "$(code "$URL/static/liff/voice.js")"
 check "GET /reports/not-exist"     404 "$(code "$URL/reports/not-exist")"
 check "GET /images/not-exist"      404 "$(code "$URL/images/not-exist")"
 check "POST / bad signature"       400 "$(code -X POST -H 'x-line-signature: bad' -d '{"events":[]}' "$URL/")"
-check "POST /urls empty"           400 "$(code -X POST -H 'content-type: application/json' -d '{"urls":[]}' "$URL/urls")"
+for p in /hn /hf /urls; do
+  check "POST $p removed"            404 "$(code -X POST -H 'content-type: application/json' -d '{}' "$URL$p")"
+done
 exit $fail

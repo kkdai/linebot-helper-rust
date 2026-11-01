@@ -12,8 +12,6 @@ pub struct Config {
     // LINE
     pub channel_secret: String,
     pub channel_access_token: String,
-    pub channel_access_token_hf: String,
-    pub line_user_id: String,
     pub liff_id: String,
 
     // Vertex AI
@@ -80,8 +78,6 @@ impl Config {
             port: parse_or("PORT", 8080),
             channel_secret: required("ChannelSecret")?,
             channel_access_token: required("ChannelAccessToken")?,
-            channel_access_token_hf: required("ChannelAccessTokenHF")?,
-            line_user_id: required("LINE_USER_ID")?,
             liff_id: or_default("LIFF_ID", ""),
             project_id: required("GOOGLE_CLOUD_PROJECT")?,
             // gemini-3.x 模型只在 global 端點提供，設成 us-central1 會 404
@@ -114,8 +110,6 @@ impl Config {
             port: 8080,
             channel_secret: "test-secret".into(),
             channel_access_token: "test-token".into(),
-            channel_access_token_hf: "test-token-hf".into(),
-            line_user_id: "Utest".into(),
             liff_id: "liff-test".into(),
             project_id: "test-project".into(),
             location: "global".into(),
